@@ -2,7 +2,7 @@ import { AutoMap } from "@automapper/classes";
 import { IsNotEmpty, IsString } from "class-validator";
 
 
-export class AuthDto {
+export class loginDto {
 
     @IsString()
     @IsNotEmpty()

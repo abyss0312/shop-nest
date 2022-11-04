@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mysql_shop
+    restart: always
+    ports:
+    - 2306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "testshop"
+      MYSQL_DATABASE: "shop_db"
+      MYSQL_USER: "aarias03"
+      MYSQL_PASSWORD: "nestpass01"
+    volumes:
+      - ./schema:/var/lib/mysql:rw
+    networks:
+      mysql_network:
+        aliases:
+          - mysql_host
+volumes:
+  shemas: {}
+networks:
+  mysql_network:
+    name: mysql_net
+    driver: bridge
