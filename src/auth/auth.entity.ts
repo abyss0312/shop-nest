@@ -1,6 +1,6 @@
 import { AutoMap } from "@automapper/classes";
 import { UserTypes } from "src/usertypes/user-types.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
 export class User {
@@ -8,7 +8,7 @@ export class User {
     @PrimaryGeneratedColumn()
     Id:number;
 
-    @Column()
+    @Column({unique:true})
     @AutoMap()
     username: string;
 
@@ -32,7 +32,7 @@ export class User {
     @AutoMap()
     lastname: string;
 
-    @Column()
+    @Column({default:''})
     @AutoMap()
     email:string;
 
@@ -41,8 +41,7 @@ export class User {
     phonenumber:string;
 
     
-    @OneToOne(()=> UserTypes)
-    @JoinColumn()
-    userType: UserTypes
+    @ManyToOne(type => UserTypes, type => type.id)
+    userType: number
 
 }

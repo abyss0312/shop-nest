@@ -10,6 +10,8 @@ import * as argon from'argon2';
 import { mapper } from 'src/shared/profiles/main';
 import { loginDto } from './dto/auth.dto';
 import { UserTypes } from 'src/usertypes/user-types.entity';
+import { ErrorsCode } from 'src/shared';
+import { getValidationError } from 'src/shared/ge-validation-error';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +29,7 @@ export class AuthService {
     async Login(request:loginDto):Promise<GenericResponse<string>>{
 
         const response = new GenericResponse<string>();
+        console.log(getValidationError(ErrorsCode.ERR_NETWORK));
 
         try{
             const userDB= await this.userRepository.findOneBy({
@@ -37,7 +40,7 @@ export class AuthService {
             if(!userDB) {
                 response.code=404;
                 response.data= '';
-                response.error = getErrorMessage(HttpStatus.NOT_FOUND,['Usuario no encontrado']);
+                response.error = getErrorMessage(ErrorsCode.ERR_USER_NOT_FOUND);
                 response.validationResult = true;
 
                 return response;
@@ -48,7 +51,7 @@ export class AuthService {
             if(!pass) {
                 response.code=404;
                 response.data= '';
-                response.error = getErrorMessage(HttpStatus.NOT_FOUND,['password incorrect']);
+                response.error = getErrorMessage(ErrorsCode.ERR_PASS_INCORRECT);
                 response.validationResult = true;
 
                 return response;
@@ -66,8 +69,8 @@ export class AuthService {
             response.code=500;
             response.data='';
             response.validationResult= false;
-            response.error = getErrorMessage(HttpStatus.BAD_GATEWAY,[ex.message]);
-        
+            response.error = getErrorMessage(ErrorsCode.ERR_NETWORK);
+    
         }
 
         return response;
@@ -85,14 +88,16 @@ export class AuthService {
          
             let user = mapper.map(request,SignupDto,User);
 
+            console.log(user)
             user.createdDate = date.toLocaleDateString();
             user.isActive = true;
             user.password = hash;
-            user.userType = {id:2,name:'Customer'};
+            user.userType = 1;
 
             const userDB = this.userRepository.create(user);
-            await this.userRepository.save(userDB);
             console.log(userDB);
+            await this.userRepository.save(userDB);
+            
 
             response.code = 201;
             response.data = '';
@@ -104,7 +109,15 @@ export class AuthService {
             response.code=500;
             response.data='';
             response.validationResult= false;
-            response.error = {statusCode: 500, message: [ex.message], error:'BadRequest'}
+            switch(ex.code){
+                case ErrorsCode.ER_DUP_ENTRY :
+                    response.error = getErrorMessage(ex.code) + 'el usuario'
+                break;
+                default:
+                    response.error = getErrorMessage(ErrorsCode.ERR_NETWORK)
+            }
+
+            
         }  
             
 

@@ -9,8 +9,9 @@ export class AuthController {
     constructor(private authService:AuthService){}
 
     @Post('signup')
-
     async Signup(@Res() response, @Body() dto:SignupDto){
+
+        console.log(dto);
 
             const result = await this.authService.SignUp(dto);
 
@@ -29,6 +30,8 @@ export class AuthController {
     @Post('login')
     async Login(@Res() response, @Body() dto:loginDto){
 
+
+        console.log('wadawd');
         const result = await this.authService.Login(dto);
 
         switch(result.code){

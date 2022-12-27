@@ -1,8 +1,15 @@
 
 
-export enum ERROR_REQUEST {
-    BAD_REQUEST="LOS datos sumistrados han sido de un formato incorrecto",
-    NOT_FOUND = "No se ha podido encontrar los datos",
-    CREATED = "Se ha creado Correctamente",
-    ERROR_CONNECT = "Error al conectarse con el servidor"
-}
+export enum ErrorsCode {
+    ERR_NETWORK  = 'ERR_NETWORK',
+    ERR_TIMEOUT = 'ERR_TIMEOUT',
+    ERR_CANCEL = 'ERR_CANCEL',
+    ERR_UNKNOWN = 'ERR_UNKNOWN',
+    ERR_400 = 'ERR_400',
+    ERR_401 = 'ERR_401',
+    ERR_404 = 'ERR_404',
+    ERR_USER_NOT_FOUND = 'ERR_USER_NOT_FOUND',
+    ERR_PASS_INCORRECT = 'ERR_PASS_INCORRECT',
+    ER_DUP_ENTRY='ER_DUP_ENTRY'
+  
+  }

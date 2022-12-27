@@ -1,3 +1,6 @@
+import { getValidationError } from "../ge-validation-error";
+import { ErrorsCode } from "./Error-enum.interface";
+
 export class GenericResponse<T>{
 
     code:number;
@@ -17,12 +20,9 @@ export class ErrorObject {
     error:string;
 }
 
-export function getErrorMessage(code:number,message:string[]): ErrorObject{
-    return {
-        statusCode:code,
-        message:message,
-        error:''
-    }
+export function getErrorMessage(code:ErrorsCode): string{
+        
+    return getValidationError(code);
    }
 
 export function getGenericMessage<T>(code:number, validation:boolean, data:T,message:string[]){
@@ -32,7 +32,7 @@ export function getGenericMessage<T>(code:number, validation:boolean, data:T,mes
     response.code = code;
     response.data = data;
     response.validationResult=validation;
-    response.error = code== 502 ? getErrorMessage(code,message) : '';
+    response.error = code== 502 ? getErrorMessage(ErrorsCode.ERR_CANCEL) : '';
 
     return response;
     
